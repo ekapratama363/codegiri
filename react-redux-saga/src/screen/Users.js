@@ -1,10 +1,10 @@
-import React, { useState, Fragment, useEffect } from "react";
-import { Spin, Modal, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Modal, Button } from "antd";
 import { connect } from "react-redux";
 import { getImage, addition } from "../store/actions";
 
 const Images = (props) => {
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(10);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageSelected, setImageSelected] = useState({});
@@ -35,8 +35,16 @@ const Images = (props) => {
     setSearch(event.target.value);
   };
 
+  window.onscroll = function (ev) {
+    console.log("hegiht", window.innerHeight + window.scrollY);
+    console.log("offsetHeight", document.body.offsetHeight);
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      handlePerPage()
+    }
+  };
+
   return (
-    <Fragment>
+    <div>
       <input
         placeholder="search"
         onChange={handleSearch}
@@ -53,11 +61,11 @@ const Images = (props) => {
         );
       })}
 
-      {props?.data.length < 5 ? null : (
+      {/* {props?.data.length < 5 ? null : (
         <Button type="primary" danger onClick={handlePerPage}>
           Load more
         </Button>
-      )}
+      )} */}
 
       <Modal
         title={imageSelected?.user?.name}
@@ -69,7 +77,9 @@ const Images = (props) => {
           <img src={imageSelected?.urls?.small_s3} />
         </div>
       </Modal>
-    </Fragment>
+
+      <p></p>
+    </div>
   );
 };
 

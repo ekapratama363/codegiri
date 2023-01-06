@@ -5,16 +5,29 @@ import Api from "../api";
 const api = new Api();
 
 const getParams = (state) => {
-  console.log('state', state)
-  return state.store.params
+  return state.store.params;
 };
 
 export function* loadImages() {
   yield put(actions.startLoading(true));
   try {
-    let params = yield select(getParams)
-    const response = yield api.getImageList(params);
-    yield put(actions.setImage(response.data));
+    let params = yield select(getParams);
+
+    let response;
+    if (params.query) {
+      response = yield api.getImageListSearch(params);
+    } else {
+      response = yield api.getImageList(params);
+    }
+
+    let data 
+    if (response?.data?.results) {
+      data = response.data.results
+    } else { 
+      data = response.data
+    }
+
+    yield put(actions.setImage(data));
   } catch (error) {
     console.log("catch called", error);
   } finally {
@@ -24,7 +37,7 @@ export function* loadImages() {
 
 export function* addition() {
   try {
-    let params = yield select(getParams)
+    let params = yield select(getParams);
     console.log("params", params);
   } catch (error) {
     console.log("catch called");

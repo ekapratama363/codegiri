@@ -4,65 +4,71 @@ import { connect } from "react-redux";
 import { getImage, addition } from "../store/actions";
 
 const Images = (props) => {
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(6);
+  const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageSelected, setImageSelected] = useState({});
 
   useEffect(() => {
-    props.addition({ page: 1, per_page: perPage });
+    props.addition({ page: 1, per_page: perPage, query: search });
     props.getImage();
-  }, [perPage]);
+  }, [perPage, search]);
 
   const handlePerPage = () => {
-    setPerPage(perPage + 5);
+    setPerPage(perPage + 6);
   };
 
   const showModal = (image) => {
     setIsModalOpen(true);
     setImageSelected(image);
   };
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
-  console.log("imageselected", imageSelected);
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
 
   return (
     <Fragment>
-      {props.loading ? (
-        <Spin />
-      ) : (
-        <Fragment>
+      <input
+        placeholder="search"
+        onChange={handleSearch}
+        style={{ margin: "10px" }}
+      />
 
-          <input placeholder="search" style={{margin: '10px'}}/>
+      {props?.data?.map((image) => {
+        return (
+          <div style={{ padding: "2px" }} key={image?.id}>
+            <img src={image?.urls?.regular} width={100} height={100} />
 
-          {props?.data?.map((image) => {
-            return (
-              <div style={{ padding: "2px" }} key={image?.id}>
-                <img src={image?.urls?.regular} width={100} height={100} />
+            <Button onClick={() => showModal(image)}>Show</Button>
+          </div>
+        );
+      })}
 
-                <Button onClick={() => showModal(image)}>Show</Button>
-              </div>
-            );
-          })}
-
-          <Button type="primary" danger onClick={handlePerPage}>Load more</Button>
-
-          <Modal
-            title={imageSelected?.user?.name}
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-          >
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <img src={imageSelected?.urls?.small_s3} />
-            </div>
-          </Modal>
-        </Fragment>
+      {props?.data.length < 6 ? null : (
+        <Button type="primary" danger onClick={handlePerPage}>
+          Load more
+        </Button>
       )}
+
+      <Modal
+        title={imageSelected?.user?.name}
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img src={imageSelected?.urls?.small_s3} />
+        </div>
+      </Modal>
     </Fragment>
   );
 };

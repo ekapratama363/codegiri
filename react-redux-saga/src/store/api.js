@@ -1,24 +1,3 @@
-// import { create } from "apisauce";
-
-// // Base API Init
-// const api = create({
-//     baseURL: "https://hn.algolia.com"
-// });
-// // Functions list init
-// let user = {};
-
-// user.getUser = async () => {
-//     try {
-//         const response = await api.get("/api/v1/search?query=redux");
-//         return response;
-//     } catch (error) {
-//         console.error(error);
-//         return error;
-//     }
-// };
-
-// export default user;
-
 import * as axios from "axios";
 
 export default class Api {
@@ -43,5 +22,9 @@ export default class Api {
 
   getImageList = (params) => {
     return this.init().get(`/photos?client_id=${this.client_id}`, { params });
+  };
+
+  getImageListSearch = (params) => {
+    return this.init().get(`/search/photos?client_id=${this.client_id}`, { params });
   };
 }

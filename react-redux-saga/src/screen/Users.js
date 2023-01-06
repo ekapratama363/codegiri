@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { getImage, addition } from "../store/actions";
 
 const Images = (props) => {
-  const [perPage, setPerPage] = useState(6);
+  const [perPage, setPerPage] = useState(5);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageSelected, setImageSelected] = useState({});
@@ -15,7 +15,7 @@ const Images = (props) => {
   }, [perPage, search]);
 
   const handlePerPage = () => {
-    setPerPage(perPage + 6);
+    setPerPage(perPage + 5);
   };
 
   const showModal = (image) => {
@@ -53,7 +53,7 @@ const Images = (props) => {
         );
       })}
 
-      {props?.data.length < 6 ? null : (
+      {props?.data.length < 5 ? null : (
         <Button type="primary" danger onClick={handlePerPage}>
           Load more
         </Button>
